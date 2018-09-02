@@ -1,0 +1,19 @@
+{
+  "name": "myblog",
+  "version": "1.0.0",
+  "description": "简易个人博客",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wq520/myblog.git"
+  },
+  "author": "墨凡",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wq520/myblog/issues"
+  },
+  "homepage": "https://github.com/wq520/myblog#readme"
+}
