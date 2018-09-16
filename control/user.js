@@ -85,6 +85,29 @@ exports.login = async ctx => {
     }
 
     // 让用户在他的 cookie 里设置 username password 加密后的密码 权限
+    ctx.cookies.set("username", username, {
+      domain: "localhost",
+      path: "/",
+      maxAge: 36e5,
+      httpOnly: true, // 不让客户端访问这个 cookie
+      overwrite: false,
+      // signed: true
+    })
+
+    // 用户在数据库 _id值
+    ctx.set("uid", data[0]._id, {
+      domain: "localhost",
+      path: "/",
+      maxAge: 36e5,
+      httpOnly: true, // 不让客户端访问这个 cookie
+      overwrite: false,
+      // signed: true
+    })
+
+    ctx.session = {
+      username,
+      uid: data[0]._id
+    }
 
     // 登录成功
     await ctx.render("isOk", {
