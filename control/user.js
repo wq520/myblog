@@ -95,7 +95,7 @@ exports.login = async ctx => {
     })
 
     // 用户在数据库 _id值
-    ctx.set("uid", data[0]._id, {
+    ctx.cookies.set("uid", data[0]._id, {
       domain: "localhost",
       path: "/",
       maxAge: 36e5,
@@ -120,4 +120,31 @@ exports.login = async ctx => {
     })
   })
 
+}
+
+// 保持用户的状态
+exports.keepLog = async (ctx, next) => {
+  if (ctx.session.isNew) { // session没有
+    if (ctx.cookies.get("username")) {
+      ctx.session = {
+        username: ctx.cookies.get("username"),
+        uid: ctx.cookies.get("uid")
+      }
+    }
+  }
+  await next()
+}
+
+// 用户退出中间件
+exports.logout = async ctx => {
+  ctx.session = null,
+  ctx.cookies.set("username", null, {
+    maxAge: 0
+  })
+  ctx.cookies.set("uid", null, {
+    maxAge: 0
+  })
+
+  // 在后台做重定向 跟
+  ctx.redirect("/")
 }
