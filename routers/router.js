@@ -4,7 +4,7 @@ const user = require('../control/user')
 const router = new Router
 
 // 设置主页
-router.get("/", user.keepLog, async (ctx) => {
+router.get("/", async (ctx) => {
     await ctx.render("index", {
         title: "寒光博客",
         session: {
