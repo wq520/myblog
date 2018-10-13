@@ -55,7 +55,7 @@ exports.getList = async ctx => {
     let page = ctx.params.id || 1
     page--
 
-    const maxNum = await estimatedDocumentCount((err, num) => err? console.log(err) : num)
+    const maxNum = await estimatedDocumentCount((err, num) => err ? console.log(err) : num)
     const artList = await Article
     .find()
     .sort('-created')
