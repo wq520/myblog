@@ -32,4 +32,7 @@ router.post("/article", user.keepLog, article.add)
 // 文章列表分页 路由
 router.get("/page/:id", article.getList)
 
+// 文章详情页 路由
+router.get("/article/:id", user.keepLog, article.details)
+
 module.exports = router

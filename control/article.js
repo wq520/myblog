@@ -77,3 +77,20 @@ exports.getList = async ctx => {
         maxNum
     })
 }
+
+// 文章详情
+exports.details = async ctx => {
+    // 去动态路由里面的 id
+    const _id =  ctx.params.id
+   
+    const article = await Article
+    .findById(_id)
+    .populate("author", "username")
+    .then(data => data)
+
+    await ctx.render("article", {
+        title: article.title,
+        article,
+        session: ctx.session
+    })
+}
