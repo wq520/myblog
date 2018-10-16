@@ -2,6 +2,7 @@ const Router = require('koa-router')
 // 拿到操作user表的逻辑对象
 const user = require('../control/user')
 const article = require('../control/article')
+const comment = require("../control/comment");
 const router = new Router
 
 // 设置主页
@@ -34,5 +35,8 @@ router.get("/page/:id", article.getList)
 
 // 文章详情页 路由
 router.get("/article/:id", user.keepLog, article.details)
+
+// 发表评论
+router.post("/comment", user.keepLog, comment.save)
 
 module.exports = router

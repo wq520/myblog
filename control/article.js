@@ -7,6 +7,9 @@ const User = db.model("users", UserSchema)
 // 通过 db 对象创建操作article数据库的模型对象
 const Article = db.model("articles", ArticleSchema)
 
+const CommentSchema = require("../Schema/comment");
+const Comment = db.model("comments", CommentSchema);
+
 // 返回文章发表页
 exports.addPage = async (ctx) => {
     await ctx.render("add-article", {
@@ -29,6 +32,8 @@ exports.add = async ctx => {
     const data = ctx.request.body
     // 添加文章作者
     data.author = ctx.session.uid
+    data.commentNum = 0
+    
     await new Promise((resolve, reject) => {
        new Article(data).save((err, data) => {
            if (err) return reject(err)
@@ -55,7 +60,7 @@ exports.getList = async ctx => {
     let page = ctx.params.id || 1
     page--
 
-    const maxNum = await estimatedDocumentCount((err, num) => err ? console.log(err) : num)
+    const maxNum = await Article.estimatedDocumentCount((err, num) => err ? console.log(err) : num)
     const artList = await Article
     .find()
     .sort('-created')
@@ -67,8 +72,6 @@ exports.getList = async ctx => {
     })
     .then(data => data)
     .catch(err => console.log(err))
-
-    console.log(artList)
 
     await ctx.render("index", {
         session: ctx.session,
@@ -88,9 +91,20 @@ exports.details = async ctx => {
     .populate("author", "username")
     .then(data => data)
 
+    // 文章评论
+    const comment = await Comment
+        .find({ article: _id })
+        .sort("-created")
+        .populate("from", "username avatar")
+        .then(data => data)
+        .catch(err => {
+            console.log(err)
+        })
+
     await ctx.render("article", {
         title: article.title,
         article,
+        comment,
         session: ctx.session
     })
 }
