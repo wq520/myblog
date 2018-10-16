@@ -40,3 +40,31 @@ app.use(router.routes()).use(router.allowedMethods())
 app.listen(3000, () => {
     console.log("项目启动成功，监听在3000端口")
 })
+
+// 创建管理员用户 ，管理员用户存在 则返回
+{
+    const { db } = require('./Schema/config')
+    const UserSchema = require('./Schema/user')
+    const User = db.model("users", UserSchema)
+    const encrypt = require("./util/encrypt");
+
+    User
+    .find({username: "admin"})
+    .then(data => {
+        if (data.length === 0) {
+            // 管理员不存在 创建
+            new User({
+                username: "admin",
+                password: encrypt("admin"),
+                role: 666,
+                articleNum: 0,
+                commentNum: 0
+            })
+            .save()
+            .then(data => { console.log(`管理员用户名 => admin 密码 =>` + encrypt('admin'))})
+            .catch(err => {console.log('管理员账号检查失败')})
+        } else {
+          console.log(`管理员用户名 => admin 密码 => admin`)
+        }
+    })
+}

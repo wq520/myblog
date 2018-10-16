@@ -33,10 +33,15 @@ exports.add = async ctx => {
     // 添加文章作者
     data.author = ctx.session.uid
     data.commentNum = 0
-    
+
     await new Promise((resolve, reject) => {
        new Article(data).save((err, data) => {
            if (err) return reject(err)
+           // 更新用户文章计数
+           User
+            .update({ _id: data.author }, { $inc: { articleNum: 1 } }, err => {
+                if (err) return console.log(err)
+            })
            resolve(data)
        })
    })

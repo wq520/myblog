@@ -3,6 +3,7 @@ const Router = require('koa-router')
 const user = require('../control/user')
 const article = require('../control/article')
 const comment = require("../control/comment");
+const admin = require("../control/admin");
 const router = new Router
 
 // 设置主页
@@ -38,5 +39,14 @@ router.get("/article/:id", user.keepLog, article.details)
 
 // 发表评论
 router.post("/comment", user.keepLog, comment.save)
+
+// 后台管理 路由
+router.get("/admin/:id", user.keepLog, admin.index)
+
+router.get("*", async ctx => {
+    await ctx.render("404",{
+        title: "404"
+    })
+})
 
 module.exports = router
